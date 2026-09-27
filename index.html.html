@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Documentação simplificada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<style>
+:root{
+  --bg:#1B1815;
+  --surface:#221E19;
+  --surface-2:#2A251F;
+  --border:#3A342C;
+  --ink:#E4DCCB;
+  --ink-soft:#A79B85;
+  --accent:#D8A24A;
+  --accent-ink:#241C10;
+  --sage:#93A66C;
+  --sage-soft:#B9CB93;
+  --code-bg:#14100C;
+  --code-fg:#E7DEC9;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
+
+/* ================= HOME ================= */
+#home-view{display:none;height:100vh;height:100dvh;overflow-y:auto;justify-content:center;}
+#home-view.active{display:flex;}
+#home-inner{width:100%;max-width:640px;padding:calc(60px + env(safe-area-inset-top,0px)) 24px 60px;}
+#home-inner .mark{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--sage-soft);margin:0 0 10px;}
+#home-inner h1{font-size:34px;font-weight:600;letter-spacing:-.01em;margin:0 0 12px;line-height:1.2;}
+#home-inner .lead{color:var(--ink-soft);font-size:15.5px;line-height:1.6;margin:0 0 40px;max-width:52ch;}
+#track-list{border-top:1px solid var(--border);}
+.track-row{
+  display:flex;align-items:center;gap:18px;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--border);
+  padding:20px 6px;cursor:pointer;color:var(--ink);font-family:inherit;
+}
+.track-row:hover{background:var(--surface);}
+.track-row .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-soft);width:22px;flex-shrink:0;}
+.track-row .info{flex:1;min-width:0;}
+.track-row .info h2{margin:0 0 4px;font-size:18px;font-weight:600;}
+.track-row .info p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+.track-row .pill{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  padding:5px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap;
+}
+.pill.ready{background:rgba(216,162,74,.16);color:var(--accent);}
+.pill.soon{background:var(--surface-2);color:var(--ink-soft);}
+.track-row .arrow{color:var(--ink-soft);font-size:16px;flex-shrink:0;}
+
+/* ================= GUIDE SHELL ================= */
+#guide-view{display:none;}
+#guide-view.active{display:flex;}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;}
+#overlay.show{display:block;}
+
+#sidebar{
+  width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;height:100dvh;
+  padding-top:env(safe-area-inset-top,0px);transition:transform .25s ease;z-index:20;
+}
+#brand{padding:20px 20px 14px;border-bottom:1px solid var(--border);}
+#back-home{
+  display:inline-flex;align-items:center;gap:6px;background:none;border:none;
+  color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;font-size:11.5px;cursor:pointer;padding:0 0 12px;
+}
+#back-home:hover{color:var(--accent);}
+#brand h1{margin:0;font-size:20px;font-weight:600;line-height:1.25;}
+#brand p{margin:6px 0 0;font-size:12.5px;color:var(--ink-soft);line-height:1.4;}
+#search-wrap{padding:12px 16px;border-bottom:1px solid var(--border);}
+#search{
+  width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:9px 11px;font-family:inherit;font-size:13.5px;color:var(--ink);
+}
+#search:focus{outline:2px solid var(--accent);outline-offset:1px;}
+#search::placeholder{color:var(--ink-soft);}
+#nav{flex:1;overflow-y:auto;padding:10px 10px 20px;}
+.nav-group{margin-bottom:6px;}
+.nav-group-label{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink-soft);padding:12px 10px 6px;
+}
+.nav-item{
+  display:flex;align-items:baseline;gap:9px;width:100%;text-align:left;background:none;border:none;
+  border-radius:7px;padding:9px 10px;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer;
+}
+.nav-item .n{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-soft);min-width:16px;}
+.nav-item:hover{background:var(--surface-2);}
+.nav-item.active{background:var(--accent);color:var(--accent-ink);}
+.nav-item.active .n{color:var(--accent-ink);opacity:.7;}
+.nav-empty{padding:16px 10px;color:var(--ink-soft);font-size:13px;}
+
+#topbar{
+  display:none;align-items:center;gap:12px;padding:14px 16px;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--border);
+  background:var(--surface);position:sticky;top:0;z-index:15;
+}
+#menu-btn{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:18px;cursor:pointer;flex-shrink:0;
+}
+#topbar-title{font-size:15px;font-weight:600;}
+
+#main-outer{flex:1;height:100vh;height:100dvh;overflow-y:auto;display:flex;justify-content:center;}
+#main{width:100%;max-width:720px;padding:44px 40px 80px;}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--sage-soft);margin:0 0 10px;}
+#content h2{font-size:30px;margin:0 0 6px;font-weight:600;letter-spacing:-.01em;}
+#content .tagline{color:var(--ink-soft);font-size:15.5px;margin:0 0 28px;max-width:58ch;line-height:1.55;}
+.block{margin-bottom:26px;}
+.block h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:0 0 10px;font-weight:600;}
+.prose p{margin:0 0 12px;line-height:1.65;font-size:15px;max-width:62ch;}
+.prose code,.inline-code{
+  font-family:"IBM Plex Mono",monospace;background:var(--surface-2);
+  border:1px solid var(--border);padding:1.5px 5px;border-radius:5px;font-size:13.5px;
+}
+.codebox{background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:18px 20px;overflow-x:auto;}
+.codebox pre{margin:0;}
+.codebox code[class*="language-"]{
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.7;white-space:pre;
+  background:none;text-shadow:none;
+}
+/* Prism token colors, ajustados à paleta do site */
+.token.comment{color:var(--ink-soft);font-style:italic;}
+.token.keyword{color:var(--accent);}
+.token.string,.token.char{color:var(--sage-soft);}
+.token.number,.token.boolean{color:var(--sage-soft);}
+.token.class-name{color:#EFC985;}
+.token.function{color:var(--sage);}
+.token.annotation{color:var(--ink-soft);}
+.token.punctuation{color:var(--ink-soft);}
+.token.operator{color:var(--ink);}
+.token.property{color:#EFC985;}
+.empty-track{border:1px dashed var(--border);border-radius:12px;padding:32px;text-align:center;color:var(--ink-soft);}
+.empty-track p{margin:0 0 16px;font-size:14.5px;line-height:1.6;}
+.empty-track button{
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;
+  padding:10px 18px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+}
+
+@media (max-width: 860px){
+  #topbar{display:flex;}
+  #sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #overlay.show{display:block;}
+  #main-outer{height:auto;}
+  #main{padding:28px 20px 60px;}
+  #content h2{font-size:25px;}
+  #home-inner{padding-top:calc(40px + env(safe-area-inset-top,0px));}
+  #home-inner h1{font-size:27px;}
+}
+</style>
+</head>
+<body>
+
+<div id="home-view">
+  <div id="home-inner">
+    <p class="mark">// documentação simplificada</p>
+    <h1>O que você quer consultar?</h1>
+    <p class="lead">Guias rápidos e práticos, sem enrolação — escolha uma trilha para ver conceitos e exemplos de uso.</p>
+    <div id="track-list"></div>
+  </div>
+</div>
+
+<div id="overlay" onclick="closeNav()"></div>
+
+<div id="guide-view">
+  <aside id="sidebar">
+    <div id="brand">
+      <button id="back-home" onclick="goHome()">← início</button>
+      <h1 id="brand-title">O essencial</h1>
+      <p id="brand-tagline">Guia rápido do dia a dia.</p>
+    </div>
+    <div id="search-wrap">
+      <input id="search" type="text" placeholder="Buscar conceito…" oninput="renderNav(this.value)">
+    </div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div id="topbar">
+      <button id="menu-btn" onclick="openNav()" aria-label="Abrir menu">☰</button>
+      <div id="topbar-title">Guia</div>
+    </div>
+    <div id="main-outer">
+      <main id="main"><div id="content"></div></main>
+    </div>
+  </div>
+</div>
+
+<script>
+const JAVA_TOPICS = [
+{cat:"Fundamentos", id:"variaveis", title:"Variáveis e tipos", tag:"Declarar e guardar dados",
+ body:`<p>Toda variável tem um <span class="inline-code">tipo</span> fixo. Os tipos primitivos mais usados no dia a dia são <span class="inline-code">int</span>, <span class="inline-code">double</span>, <span class="inline-code">boolean</span> e <span class="inline-code">char</span>. Para texto, use <span class="inline-code">String</span> (que não é primitivo, é um objeto).</p><p>Use <span class="inline-code">final</span> quando o valor não deve mudar depois — o equivalente Java de uma constante.</p>`,
+ code:`int idade = 28;
+double preco = 19.90;
+boolean ativo = true;
+char letra = 'A';
+String nome = "Marta";
+
+final double PI = 3.14159; // não pode reatribuir
+
+// var: o compilador infere o tipo (Java 10+)
+var total = 100;`},
+
+{cat:"Fundamentos", id:"operadores", title:"Operadores", tag:"Aritméticos, comparação e lógicos",
+ body:`<p>Os operadores aritméticos (<span class="inline-code">+ - * / %</span>) funcionam como esperado, mas cuidado: dividir dois <span class="inline-code">int</span> trunca o resultado. Os operadores de comparação retornam <span class="inline-code">boolean</span>, e os lógicos combinam condições.</p>`,
+ code:`int a = 7, b = 2;
+System.out.println(a / b);   // 3 (divisão inteira)
+System.out.println(a / 2.0); // 3.5 (força double)
+System.out.println(a % b);   // 1 (resto)
+
+boolean r = (a > b) && (b != 0); // true
+boolean s = (a == 7) || (b == 5); // true
+
+a += 1; // equivale a a = a + 1`},
+
+{cat:"Fundamentos", id:"condicionais", title:"if / else / switch", tag:"Controle de fluxo",
+ body:`<p>O <span class="inline-code">if/else</span> é o básico. Para muitas opções sobre o mesmo valor, o <span class="inline-code">switch</span> moderno (Java 14+) é mais limpo e evita o antigo problema de esquecer o <span class="inline-code">break</span>.</p>`,
+ code:`int nota = 8;
+
+if (nota >= 7) {
+    System.out.println("Aprovado");
+} else if (nota >= 5) {
+    System.out.println("Recuperação");
+} else {
+    System.out.println("Reprovado");
+}
+
+String status = switch (nota) {
+    case 10, 9 -> "Excelente";
+    case 8, 7  -> "Bom";
+    default    -> "Precisa melhorar";
+};`},
+
+{cat:"Fundamentos", id:"loops", title:"Loops", tag:"for, while, do-while, for-each",
+ body:`<p>Use <span class="inline-code">for</span> quando souber quantas vezes repetir, <span class="inline-code">while</span> quando depender de uma condição, e <span class="inline-code">for-each</span> para percorrer coleções e arrays sem se preocupar com índices.</p>`,
+ code:`for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}
+
+int n = 3;
+while (n > 0) {
+    System.out.println(n);
+    n--;
+}
+
+do {
+    System.out.println("roda pelo menos 1x");
+} while (false);
+
+int[] numeros = {1, 2, 3};
+for (int num : numeros) {
+    System.out.println(num);
+}`},
+
+{cat:"Fundamentos", id:"arrays", title:"Arrays", tag:"Listas de tamanho fixo",
+ body:`<p>Um array tem tamanho fixo definido na criação. Para listas que crescem e encolhem, veja <span class="inline-code">Collections</span> mais abaixo.</p>`,
+ code:`int[] nums = new int[3];
+nums[0] = 10;
+
+int[] letras = {5, 3, 8, 1};
+
+System.out.println(letras.length);
+java.util.Arrays.sort(letras);
+System.out.println(java.util.Arrays.toString(letras));
+
+int[][] matriz = { {1,2}, {3,4} };
+System.out.println(matriz[1][0]); // 3`},
+
+{cat:"Fundamentos", id:"strings", title:"Strings", tag:"Métodos comuns de texto",
+ body:`<p>Strings em Java são imutáveis — todo método que "modifica" na verdade retorna uma nova string. Use <span class="inline-code">StringBuilder</span> quando for concatenar muito dentro de um loop.</p>`,
+ code:`String s = "  Olá, Mundo!  ";
+
+s.trim();
+s.toUpperCase();
+s.length();
+s.contains("Mundo");
+s.replace("Mundo", "Java");
+s.split(",");
+"%s tem %d anos".formatted("Ana", 30);
+
+StringBuilder sb = new StringBuilder();
+sb.append("a").append("b").append("c");
+sb.toString();`},
+
+{cat:"Fundamentos", id:"metodos", title:"Métodos", tag:"Organizar comportamento",
+ body:`<p>Um método tem um tipo de retorno (ou <span class="inline-code">void</span>), um nome e parâmetros. Sobrecarga (<i>overload</i>) permite vários métodos com o mesmo nome e assinaturas diferentes.</p>`,
+ code:`public class Calculadora {
+
+    int somar(int a, int b) {
+        return a + b;
+    }
+
+    void imprimirResultado(int valor) {
+        System.out.println("Resultado: " + valor);
+    }
+
+    double somar(double a, double b) {
+        return a + b;
+    }
+}`},
+
+{cat:"Fundamentos", id:"objetos", title:"Classes e objetos", tag:"POO básico",
+ body:`<p>Uma classe é o molde; um objeto é uma instância criada com <span class="inline-code">new</span>. O construtor inicializa o estado.</p>`,
+ code:`public class Pessoa {
+    private String nome;
+    private int idade;
+
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    public String getNome() { return nome; }
+}
+
+Pessoa p = new Pessoa("Ana", 30);
+System.out.println(p.getNome());`},
+
+{cat:"Fundamentos", id:"heranca", title:"Herança e interfaces", tag:"extends, implements",
+ body:`<p>Uma classe herda de outra com <span class="inline-code">extends</span> (só uma). Uma <span class="inline-code">interface</span> define um contrato que várias classes podem <span class="inline-code">implements</span>.</p>`,
+ code:`interface Forma {
+    double area();
+}
+
+class Retangulo implements Forma {
+    double largura, altura;
+
+    Retangulo(double l, double a) {
+        largura = l; altura = a;
+    }
+
+    @Override
+    public double area() {
+        return largura * altura;
+    }
+}
+
+class Quadrado extends Retangulo {
+    Quadrado(double lado) {
+        super(lado, lado);
+    }
+}`},
+
+{cat:"Fundamentos", id:"enums", title:"Enums", tag:"Conjunto fixo de constantes",
+ body:`<p>Um <span class="inline-code">enum</span> representa um conjunto fixo de valores possíveis. É mais seguro que usar <span class="inline-code">String</span> ou <span class="inline-code">int</span> soltos.</p>`,
+ code:`enum Status {
+    PENDENTE, PAGO, CANCELADO
+}
+
+Status s = Status.PAGO;
+
+switch (s) {
+    case PENDENTE -> System.out.println("Aguardando");
+    case PAGO -> System.out.println("Confirmado");
+    case CANCELADO -> System.out.println("Cancelado");
+}
+
+enum Planeta {
+    MERCURIO(3.3e23), TERRA(5.97e24);
+
+    final double massa;
+    Planeta(double massa) { this.massa = massa; }
+}`},
+
+{cat:"Java moderno", id:"colecoes", title:"Collections", tag:"List, Set, Map",
+ body:`<p>As três coleções do dia a dia: <span class="inline-code">List</span> (ordenada, permite repetidos), <span class="inline-code">Set</span> (sem repetidos) e <span class="inline-code">Map</span> (chave-valor).</p>`,
+ code:`List<String> nomes = new ArrayList<>();
+nomes.add("Ana");
+nomes.add("Bruno");
+nomes.get(0);
+nomes.remove("Ana");
+
+Set<Integer> unicos = new HashSet<>();
+unicos.add(1);
+unicos.add(1);
+
+Map<String, Integer> idades = new HashMap<>();
+idades.put("Ana", 30);
+idades.get("Ana");
+idades.getOrDefault("Bia", 0);
+
+List<String> fixa = List.of("a", "b", "c");`},
+
+{cat:"Java moderno", id:"generics", title:"Generics", tag:"Tipos parametrizados",
+ body:`<p>Generics deixam uma classe ou método funcionar com qualquer tipo, mantendo a segurança em tempo de compilação.</p>`,
+ code:`class Caixa<T> {
+    private T conteudo;
+
+    void guardar(T item) { conteudo = item; }
+    T abrir() { return conteudo; }
+}
+
+Caixa<String> caixa = new Caixa<>();
+caixa.guardar("presente");
+String valor = caixa.abrir();
+
+static <T> T primeiro(List<T> lista) {
+    return lista.get(0);
+}`},
+
+{cat:"Java moderno", id:"streams", title:"Streams", tag:"Processar coleções em pipeline",
+ body:`<p>Streams permitem filtrar, transformar e agregar coleções de forma declarativa. O pipeline típico é <span class="inline-code">filter → map → collect</span>.</p>`,
+ code:`List<String> nomes = List.of("Ana", "Bruno", "Bia", "Carlos");
+
+List<String> comB = nomes.stream()
+    .filter(n -> n.startsWith("B"))
+    .map(String::toUpperCase)
+    .sorted()
+    .collect(Collectors.toList());
+
+long total = nomes.stream()
+    .filter(n -> n.length() > 3)
+    .count();
+
+boolean algumTemA = nomes.stream()
+    .anyMatch(n -> n.contains("a"));`},
+
+{cat:"Java moderno", id:"lambda", title:"Lambda e interfaces funcionais", tag:"Funções como valor",
+ body:`<p>Uma expressão lambda é uma função anônima e curta, usada no lugar de uma interface com um único método abstrato.</p>`,
+ code:`Function<Integer, Integer> dobro = x -> x * 2;
+dobro.apply(5);
+
+Predicate<String> vazia = s -> s.isEmpty();
+vazia.test("");
+
+Consumer<String> imprimir = s -> System.out.println(s);
+imprimir.accept("oi");
+
+Runnable tarefa = () -> System.out.println("rodando");
+
+nomes.forEach(n -> System.out.println(n));`},
+
+{cat:"Java moderno", id:"optional", title:"Optional", tag:"Evitar NullPointerException",
+ body:`<p><span class="inline-code">Optional&lt;T&gt;</span> representa um valor que pode ou não existir, tornando explícito no tipo o que antes era um <span class="inline-code">null</span> escondido.</p>`,
+ code:`Optional<String> nome = Optional.ofNullable(buscarNome());
+
+nome.isPresent();
+nome.orElse("Desconhecido");
+
+nome.ifPresent(n -> System.out.println("Achei: " + n));
+
+String resultado = nome
+    .map(String::toUpperCase)
+    .orElse("N/A");`},
+
+{cat:"Java moderno", id:"excecoes", title:"Exceções", tag:"try, catch, finally, throws",
+ body:`<p>Erros previsíveis viram exceções. <span class="inline-code">try/catch</span> trata o erro; <span class="inline-code">finally</span> roda sempre; <span class="inline-code">try-with-resources</span> fecha recursos automaticamente.</p>`,
+ code:`try {
+    int r = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Erro: " + e.getMessage());
+} finally {
+    System.out.println("Sempre executa");
+}
+
+class SaldoInsuficienteException extends RuntimeException {
+    SaldoInsuficienteException(String msg) { super(msg); }
+}
+
+void sacar(double valor) {
+    if (valor > 100) {
+        throw new SaldoInsuficienteException("Saldo baixo");
+    }
+}
+
+try (var leitor = new java.io.FileReader("dados.txt")) {
+    // usar leitor
+} catch (java.io.IOException e) { }`},
+
+{cat:"Java moderno", id:"records", title:"Records", tag:"Classes de dados imutáveis (Java 16+)",
+ body:`<p>Um <span class="inline-code">record</span> é um atalho para classes que só guardam dados: construtor, getters, <span class="inline-code">equals</span>, <span class="inline-code">hashCode</span> e <span class="inline-code">toString</span> são gerados automaticamente.</p>`,
+ code:`public record Ponto(int x, int y) {}
+
+Ponto p = new Ponto(2, 4);
+p.x();
+p.toString(); // "Ponto[x=2, y=4]"
+
+public record Idade(int valor) {
+    public Idade {
+        if (valor < 0) throw new IllegalArgumentException("Idade negativa");
+    }
+}`},
+
+{cat:"Java moderno", id:"comparator", title:"Comparator & Comparable", tag:"Ordenar objetos personalizados",
+ body:`<p>Para ordenar objetos, implemente <span class="inline-code">Comparable</span> na classe (ordem natural) ou use <span class="inline-code">Comparator</span> para ordens específicas sem alterar a classe original.</p>`,
+ code:`record Pessoa(String nome, int idade) {}
+
+List<Pessoa> pessoas = new ArrayList<>(List.of(
+    new Pessoa("Ana", 30), new Pessoa("Bruno", 25)
+));
+
+pessoas.sort(Comparator.comparing(Pessoa::idade));
+
+pessoas.sort(
+    Comparator.comparing(Pessoa::idade)
+              .thenComparing(Pessoa::nome)
+);
+
+pessoas.sort(Comparator.comparing(Pessoa::idade).reversed());`},
+
+{cat:"Java moderno", id:"localdate", title:"LocalDate & LocalDateTime", tag:"API de datas moderna (java.time)",
+ body:`<p>Desde o Java 8, <span class="inline-code">java.time</span> substitui a antiga <span class="inline-code">Date</span>. As classes são imutáveis.</p>`,
+ code:`LocalDate hoje = LocalDate.now();
+LocalDate proxSemana = hoje.plusDays(7);
+LocalDate ano2000 = LocalDate.of(2000, 1, 1);
+
+hoje.isAfter(ano2000);
+hoje.getDayOfWeek();
+
+LocalDateTime agora = LocalDateTime.now();
+
+DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+String texto = hoje.format(fmt);
+
+Period periodo = Period.between(ano2000, hoje);
+periodo.getYears();`},
+];
+
+const SPRING_TOPICS = [
+{cat:"Anotações principais", id:"springbootapplication", title:"@SpringBootApplication", tag:"O ponto de partida da aplicação",
+ body:`<p>Combina três anotações em uma: <span class="inline-code">@Configuration</span> (a classe pode definir beans), <span class="inline-code">@EnableAutoConfiguration</span> (o Spring configura sozinho o que detectar no classpath) e <span class="inline-code">@ComponentScan</span> (procura <span class="inline-code">@Component</span> no pacote atual e nos filhos).</p>`,
+ code:`@SpringBootApplication
+public class LojaApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LojaApplication.class, args);
+    }
+}`},
+
+{cat:"Anotações principais", id:"component", title:"@Component", tag:"Marca uma classe como bean gerenciado",
+ body:`<p>É a anotação genérica que diz ao Spring "gerencie uma instância desta classe pra mim". <span class="inline-code">@Service</span>, <span class="inline-code">@Repository</span> e <span class="inline-code">@Controller</span> são especializações dela — usam a mesma ideia, mas deixam a intenção mais clara.</p>`,
+ code:`@Component
+public class GeradorDeCodigo {
+    public String gerar() {
+        return "PED-" + System.currentTimeMillis();
+    }
+}
+
+// em qualquer outro bean, é só pedir no construtor
+public PedidoService(GeradorDeCodigo gerador) { ... }`},
+
+{cat:"Anotações principais", id:"service", title:"@Service", tag:"Marca a camada de regras de negócio",
+ body:`<p>É um <span class="inline-code">@Component</span> especializado para a camada de serviço — onde fica a lógica da aplicação, orquestrando repositórios e outras regras. Funciona de forma idêntica ao <span class="inline-code">@Component</span>, mas comunica melhor a intenção da classe para quem lê o código.</p>`,
+ code:`@Service
+public class PedidoService {
+
+    private final PedidoRepository repository;
+
+    public PedidoService(PedidoRepository repository) {
+        this.repository = repository;
+    }
+
+    public Pedido criar(Pedido pedido) {
+        return repository.save(pedido);
+    }
+}`},
+
+{cat:"Anotações principais", id:"repository", title:"@Repository", tag:"Marca a camada de acesso a dados",
+ body:`<p>Especialização de <span class="inline-code">@Component</span> para classes de acesso a dados. Além de identificar a intenção, o Spring também traduz automaticamente exceções de banco de dados em exceções próprias, mais fáceis de tratar.</p><p>Ao usar <span class="inline-code">JpaRepository</span> (interface do Spring Data), essa anotação nem precisa ser escrita — o Spring já reconhece a interface.</p>`,
+ code:`@Repository
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+    List<Produto> findByNomeContaining(String nome);
+}`},
+
+{cat:"Anotações principais", id:"controller", title:"@Controller e @RestController", tag:"Camada que recebe requisições HTTP",
+ body:`<p><span class="inline-code">@Controller</span> é usado quando os métodos retornam nomes de páginas (views). <span class="inline-code">@RestController</span> é <span class="inline-code">@Controller</span> + <span class="inline-code">@ResponseBody</span>: tudo que o método retorna vira o corpo da resposta (geralmente JSON), sem precisar anotar método por método.</p>`,
+ code:`@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+
+    @GetMapping("/{id}")
+    public Pedido buscar(@PathVariable Long id) {
+        return service.buscarPorId(id); // vira JSON direto
+    }
+}`},
+
+{cat:"Injeção & configuração", id:"autowired", title:"@Autowired", tag:"Como o Spring injeta as dependências",
+ body:`<p><span class="inline-code">@Autowired</span> pede ao Spring para injetar um bean automaticamente. Pode ir no construtor, em um setter ou direto no campo — mas a prática recomendada é construtor, porque deixa a dependência explícita e facilita testes. Em construtor único, a anotação é até opcional.</p>`,
+ code:`@Service
+public class PedidoService {
+
+    private final PedidoRepository repository;
+
+    @Autowired // opcional se só há um construtor
+    public PedidoService(PedidoRepository repository) {
+        this.repository = repository;
+    }
+}
+
+// evite: injeção por campo, dificulta testar
+@Autowired
+private PedidoRepository repository;`},
+
+{cat:"Injeção & configuração", id:"configuration-bean", title:"@Configuration e @Bean", tag:"Criar beans manualmente",
+ body:`<p>Quando você precisa registrar um bean que não é uma classe sua (uma lib externa, por exemplo), cria um método anotado com <span class="inline-code">@Bean</span> dentro de uma classe <span class="inline-code">@Configuration</span>. O retorno do método vira um bean gerenciado pelo Spring.</p>`,
+ code:`@Configuration
+public class AppConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+
+// em outro lugar, é só injetar normalmente
+public NotaFiscalService(RestTemplate restTemplate) { ... }`},
+
+{cat:"Injeção & configuração", id:"value", title:"@Value", tag:"Ler uma propriedade específica",
+ body:`<p>Injeta o valor de uma propriedade do <span class="inline-code">application.properties</span> (ou variável de ambiente) direto num campo. Bom para valores pontuais; para grupos de propriedades relacionadas, prefira <span class="inline-code">@ConfigurationProperties</span>.</p>`,
+ code:`# application.properties
+app.nome-loja=Loja do João`,
+ code2:`@Value("\${app.nome-loja}")
+private String nomeLoja;
+
+// com valor padrão, caso a propriedade não exista
+@Value("\${app.limite-pedidos:100}")
+private int limitePedidos;`},
+
+{cat:"Injeção & configuração", id:"configuration-properties", title:"@ConfigurationProperties", tag:"Agrupar várias propriedades relacionadas",
+ body:`<p>Em vez de vários <span class="inline-code">@Value</span> soltos, agrupa um conjunto de propriedades com o mesmo prefixo em uma classe (ou record) só, já validada e tipada.</p>`,
+ code:`# application.properties
+app.nome-loja=Loja do João
+app.limite-pedidos=50`,
+ code2:`@ConfigurationProperties(prefix = "app")
+public record AppConfig(String nomeLoja, int limitePedidos) {}
+
+// habilitar o suporte no @SpringBootApplication:
+@EnableConfigurationProperties(AppConfig.class)`},
+
+{cat:"Injeção & configuração", id:"profile", title:"@Profile", tag:"Beans diferentes por ambiente",
+ body:`<p>Faz um bean só existir quando um perfil específico está ativo (definido em <span class="inline-code">spring.profiles.active=dev</span>). Útil para trocar implementações entre desenvolvimento, teste e produção — como um serviço de e-mail falso em dev.</p>`,
+ code:`@Service
+@Profile("dev")
+public class EmailFalsoService implements EmailService {
+    public void enviar(String para, String msg) {
+        System.out.println("[DEV] e-mail simulado para " + para);
+    }
+}
+
+@Service
+@Profile("prod")
+public class EmailRealService implements EmailService { ... }`},
+
+{cat:"Web / REST", id:"requestmapping", title:"@RequestMapping", tag:"Definir o caminho base de um controller",
+ body:`<p>Define o prefixo de URL para todos os métodos de um controller. Pode ser usado na classe (caminho base) e também em métodos individuais, embora hoje seja mais comum usar as variantes por verbo HTTP nos métodos.</p>`,
+ code:`@RestController
+@RequestMapping("/pedidos") // todo endpoint aqui começa com /pedidos
+public class PedidoController {
+    // @GetMapping("/{id}") vira, na prática, GET /pedidos/{id}
+}`},
+
+{cat:"Web / REST", id:"http-mappings", title:"@GetMapping, @PostMapping...", tag:"Um endpoint por verbo HTTP",
+ body:`<p>Atalhos para <span class="inline-code">@RequestMapping</span> com o verbo já definido: <span class="inline-code">@GetMapping</span> (buscar), <span class="inline-code">@PostMapping</span> (criar), <span class="inline-code">@PutMapping</span> (atualizar por completo), <span class="inline-code">@PatchMapping</span> (atualizar parcialmente) e <span class="inline-code">@DeleteMapping</span> (remover).</p>`,
+ code:`@GetMapping("/{id}")
+public Pedido buscar(@PathVariable Long id) { ... }
+
+@PostMapping
+public Pedido criar(@RequestBody Pedido pedido) { ... }
+
+@PutMapping("/{id}")
+public Pedido atualizar(@PathVariable Long id, @RequestBody Pedido pedido) { ... }
+
+@DeleteMapping("/{id}")
+public void remover(@PathVariable Long id) { ... }`},
+
+{cat:"Web / REST", id:"pathvariable", title:"@PathVariable", tag:"Ler um valor da URL",
+ body:`<p>Extrai um trecho da própria URL. Em <span class="inline-code">/pedidos/{id}</span>, o valor que substituir <span class="inline-code">{id}</span> é injetado no parâmetro anotado.</p>`,
+ code:`@GetMapping("/{id}")
+public Pedido buscar(@PathVariable Long id) {
+    return service.buscarPorId(id);
+}
+
+// nome diferente do parâmetro da URL
+@GetMapping("/{pedidoId}/itens")
+public List<Item> itens(@PathVariable("pedidoId") Long id) { ... }`},
+
+{cat:"Web / REST", id:"requestparam", title:"@RequestParam", tag:"Ler parâmetros de query string",
+ body:`<p>Lê valores depois do <span class="inline-code">?</span> na URL, como <span class="inline-code">/pedidos?status=PAGO</span>. Pode ter valor padrão e ser opcional.</p>`,
+ code:`// GET /pedidos?status=PAGO&pagina=2
+@GetMapping
+public List<Pedido> listar(
+    @RequestParam(required = false) String status,
+    @RequestParam(defaultValue = "1") int pagina
+) {
+    return service.listar(status, pagina);
+}`},
+
+{cat:"Web / REST", id:"requestbody", title:"@RequestBody", tag:"Converter o JSON da requisição em objeto",
+ body:`<p>Pega o corpo da requisição (geralmente JSON) e converte automaticamente para um objeto Java — sem precisar fazer o parsing manual.</p>`,
+ code:`public record PedidoRequest(String cliente, int quantidade) {}
+
+@PostMapping
+public Pedido criar(@RequestBody PedidoRequest req) {
+    return service.criar(req);
+}
+// { "cliente": "Ana", "quantidade": 2 } vira um PedidoRequest`},
+
+{cat:"Web / REST", id:"responseentity", title:"ResponseEntity", tag:"Controlar status HTTP e cabeçalhos da resposta",
+ body:`<p>Quando o retorno simples do objeto não é suficiente, <span class="inline-code">ResponseEntity</span> permite escolher o status HTTP, cabeçalhos e corpo da resposta com controle total.</p>`,
+ code:`@GetMapping("/{id}")
+public ResponseEntity<Pedido> buscar(@PathVariable Long id) {
+    return service.buscarPorId(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+}
+
+@PostMapping
+public ResponseEntity<Pedido> criar(@RequestBody PedidoRequest req) {
+    Pedido criado = service.criar(req);
+    return ResponseEntity.status(HttpStatus.CREATED).body(criado);
+}`},
+
+{cat:"Web / REST", id:"valid", title:"@Valid e Bean Validation", tag:"Validar dados de entrada automaticamente",
+ body:`<p>Anotações como <span class="inline-code">@NotBlank</span>, <span class="inline-code">@Min</span> e <span class="inline-code">@Email</span> (de <span class="inline-code">jakarta.validation</span>) descrevem regras direto no DTO. Com <span class="inline-code">@Valid</span> no parâmetro, o Spring valida antes do método rodar e já responde 400 se algo estiver errado.</p>`,
+ code:`public record PedidoRequest(
+    @NotBlank String cliente,
+    @Min(1) int quantidade,
+    @Email String emailContato
+) {}
+
+@PostMapping
+public Pedido criar(@Valid @RequestBody PedidoRequest req) {
+    return service.criar(req);
+}`},
+
+{cat:"Web / REST", id:"controlleradvice", title:"@ControllerAdvice e @ExceptionHandler", tag:"Tratar erros em um só lugar",
+ body:`<p>Em vez de tratar exceções dentro de cada controller, uma classe <span class="inline-code">@ControllerAdvice</span> centraliza esse tratamento para toda a aplicação, convertendo exceções em respostas HTTP consistentes.</p>`,
+ code:`@ControllerAdvice
+public class ApiExceptionHandler {
+
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    public ResponseEntity<String> naoEncontrado(PedidoNaoEncontradoException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> validacao(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body("Dados inválidos");
+    }
+}`},
+
+{cat:"Dados", id:"transactional", title:"@Transactional", tag:"Garantir que operações aconteçam juntas",
+ body:`<p>Garante que um conjunto de operações no banco funcione como uma unidade: se algo falhar no meio, tudo é desfeito (<i>rollback</i>). É comum colocar na camada de serviço, não no repositório.</p>`,
+ code:`@Service
+public class TransferenciaService {
+
+    @Transactional
+    public void transferir(Long origemId, Long destinoId, BigDecimal valor) {
+        Conta origem = contaRepository.findById(origemId).orElseThrow();
+        Conta destino = contaRepository.findById(destinoId).orElseThrow();
+
+        origem.debitar(valor);
+        destino.creditar(valor);
+        // se algo lançar exceção aqui, nada é salvo
+    }
+}`},
+
+{cat:"Testes", id:"springboottest", title:"@SpringBootTest", tag:"Teste de integração com o contexto completo",
+ body:`<p>Sobe o contexto inteiro da aplicação para o teste, como se fosse rodar de verdade. Mais lento que um teste unitário puro, mas útil para validar que as peças se encaixam.</p>`,
+ code:`@SpringBootTest
+class PedidoServiceIntegrationTest {
+
+    @Autowired
+    PedidoService service;
+
+    @Test
+    void deveCriarPedidoComSucesso() {
+        Pedido pedido = service.criar(new PedidoRequest("Ana", 2));
+        assertNotNull(pedido.getId());
+    }
+}`},
+
+{cat:"Testes", id:"webmvctest", title:"@WebMvcTest e MockMvc", tag:"Testar só a camada web, sem subir tudo",
+ body:`<p><span class="inline-code">@WebMvcTest</span> sobe apenas a camada web (controllers), sem repositórios ou banco real. <span class="inline-code">MockMvc</span> simula requisições HTTP para testar os endpoints isoladamente.</p>`,
+ code:`@WebMvcTest(PedidoController.class)
+class PedidoControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Test
+    void deveRetornar200AoBuscarPedido() throws Exception {
+        mockMvc.perform(get("/pedidos/1"))
+               .andExpect(status().isOk());
+    }
+}`},
+];
+
+const JPA_TOPICS = [
+{cat:"Modelagem", id:"entidade", title:"Entidade (@Entity)", tag:"Mapear uma classe para uma tabela",
+ body:`<p><span class="inline-code">@Entity</span> marca uma classe como tabela do banco. <span class="inline-code">@Id</span> define a chave primária, e <span class="inline-code">@GeneratedValue</span> deixa o banco gerar o valor automaticamente.</p>`,
+ code:`@Entity
+public class Produto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String nome;
+
+    private BigDecimal preco;
+
+    // getters e setters
+}`},
+
+{cat:"Modelagem", id:"relacionamentos", title:"Relacionamentos", tag:"@OneToMany, @ManyToOne, @ManyToMany",
+ body:`<p>Relacionamentos ligam entidades entre si. O lado "dono" da relação normalmente tem a chave estrangeira (<span class="inline-code">@ManyToOne</span>); o outro lado usa <span class="inline-code">mappedBy</span> para apontar de volta, sem criar coluna extra.</p>`,
+ code:`@Entity
+public class Pedido {
+    @Id @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemPedido> itens = new ArrayList<>();
+}
+
+@Entity
+public class ItemPedido {
+    @Id @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
+}`},
+
+{cat:"Modelagem", id:"fetch-cascade", title:"FetchType e Cascade", tag:"Carregamento e propagação de operações",
+ body:`<p><span class="inline-code">FetchType.LAZY</span> só busca os dados relacionados quando forem realmente acessados (evita carregar tudo de uma vez); <span class="inline-code">EAGER</span> busca junto. <span class="inline-code">CascadeType</span> define se operações (salvar, apagar) se propagam para os relacionados.</p>`,
+ code:`@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+private List<ItemPedido> itens;
+
+// LAZY: itens só são carregados ao chamar pedido.getItens()
+// CascadeType.ALL: salvar/apagar o pedido afeta os itens junto`},
+
+{cat:"Persistência", id:"repository", title:"JpaRepository", tag:"CRUD pronto e consultas por nome de método",
+ body:`<p>Ao estender <span class="inline-code">JpaRepository</span>, você já ganha <span class="inline-code">save</span>, <span class="inline-code">findById</span>, <span class="inline-code">deleteById</span> e mais. Métodos de consulta simples podem ser criados só pelo nome, sem escrever SQL.</p>`,
+ code:`public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+
+    List<Produto> findByNomeContaining(String nome);
+
+    Optional<Produto> findByNomeIgnoreCase(String nome);
+
+    List<Produto> findByPrecoLessThan(BigDecimal preco);
+}
+
+// uso
+produtoRepository.save(produto);
+produtoRepository.findById(1L);
+produtoRepository.findByNomeContaining("caneca");`},
+
+{cat:"Persistência", id:"jpql", title:"Consultas com @Query (JPQL)", tag:"Quando o nome do método não é suficiente",
+ body:`<p>Para consultas mais complexas, escreva JPQL (parecido com SQL, mas referenciando entidades e campos Java) direto na interface do repositório.</p>`,
+ code:`public interface PedidoRepository extends JpaRepository<Pedido, Long> {
+
+    @Query("SELECT p FROM Pedido p WHERE p.cliente.nome = :nome")
+    List<Pedido> buscarPorNomeCliente(@Param("nome") String nome);
+
+    @Query("SELECT p FROM Pedido p WHERE p.total > :valor ORDER BY p.data DESC")
+    List<Pedido> acimaDe(@Param("valor") BigDecimal valor);
+}`},
+
+{cat:"Persistência", id:"transacoes", title:"@Transactional", tag:"Garantir que operações aconteçam juntas",
+ body:`<p><span class="inline-code">@Transactional</span> garante que um conjunto de operações no banco funcione como uma unidade: se algo falhar no meio, tudo é desfeito (<i>rollback</i>). É comum colocar na camada de serviço.</p>`,
+ code:`@Service
+public class TransferenciaService {
+
+    @Transactional
+    public void transferir(Long origemId, Long destinoId, BigDecimal valor) {
+        Conta origem = contaRepository.findById(origemId).orElseThrow();
+        Conta destino = contaRepository.findById(destinoId).orElseThrow();
+
+        origem.debitar(valor);
+        destino.creditar(valor);
+        // se debitar/creditar lançar exceção, nada é salvo
+    }
+}`},
+];
+
+const TRACKS = {
+  java: { label:"Java", tagline:"Sintaxe essencial e recursos modernos, para consulta rápida.", topics: JAVA_TOPICS },
+  springboot: { label:"Spring Boot", tagline:"Estrutura de projeto, controllers, injeção de dependência e mais.", topics: SPRING_TOPICS },
+  jpa: { label:"JPA", tagline:"Entidades, relacionamentos, repositórios e consultas.", topics: JPA_TOPICS },
+};
+
+let CURRENT_TRACK = null;
+let ACTIVE_TOPIC = null;
+
+function parseHash(){
+  return location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+}
+function route(){
+  const parts = parseHash();
+  if (parts.length === 0){ showHome(); return; }
+  const trackId = parts[0];
+  if (!TRACKS[trackId]){ location.hash = "#/"; return; }
+  showGuide(trackId, parts[1]);
+}
+window.addEventListener("hashchange", route);
+
+function goHome(){ location.hash = "#/"; }
+function goTrack(id){ location.hash = "#/" + id; }
+
+function showHome(){
+  document.getElementById("home-view").classList.add("active");
+  document.getElementById("guide-view").classList.remove("active");
+  const list = document.getElementById("track-list");
+  list.innerHTML = "";
+  Object.entries(TRACKS).forEach(([id, t], i) => {
+    const ready = t.topics.length > 0;
+    const row = document.createElement("button");
+    row.className = "track-row";
+    row.innerHTML = `
+      <span class="idx">${String(i+1).padStart(2,"0")}</span>
+      <span class="info"><h2>${t.label}</h2><p>${t.tagline}</p></span>
+      <span class="pill ${ready ? "ready" : "soon"}">${ready ? "disponível" : "em breve"}</span>
+      <span class="arrow">→</span>`;
+    row.onclick = () => goTrack(id);
+    list.appendChild(row);
+  });
+}
+
+function showGuide(trackId, topicId){
+  document.getElementById("home-view").classList.remove("active");
+  document.getElementById("guide-view").classList.add("active");
+  CURRENT_TRACK = trackId;
+  const t = TRACKS[trackId];
+  document.getElementById("brand-title").textContent = t.label;
+  document.getElementById("brand-tagline").textContent = t.tagline;
+  document.getElementById("search").value = "";
+
+  if (t.topics.length === 0){
+    document.getElementById("nav").innerHTML = `<div class="nav-empty">Ainda não há tópicos aqui.</div>`;
+    document.getElementById("topbar-title").textContent = t.label;
+    document.getElementById("content").innerHTML = `
+      <p class="eyebrow">${t.label}</p>
+      <h2>Em construção</h2>
+      <div class="empty-track">
+        <p>Este guia ainda não tem conteúdo. Volte para escolher outra trilha.</p>
+        <button onclick="goHome()">← Voltar ao início</button>
+      </div>`;
+    return;
+  }
+
+  ACTIVE_TOPIC = t.topics.find(x => x.id === topicId) ? topicId : t.topics[0].id;
+  renderNav("");
+  renderContent();
+}
+
+function iconFor(i){ return String(i+1).padStart(2,"0"); }
+
+function renderNav(filter){
+  filter = (filter || "").toLowerCase();
+  const topics = TRACKS[CURRENT_TRACK].topics;
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+  const groups = {};
+  topics.forEach(t => { (groups[t.cat] ||= []).push(t); });
+
+  let any = false;
+  Object.entries(groups).forEach(([cat, items]) => {
+    const matched = items.filter(t =>
+      t.title.toLowerCase().includes(filter) || t.tag.toLowerCase().includes(filter)
+    );
+    if (!matched.length) return;
+    any = true;
+    const label = document.createElement("div");
+    label.className = "nav-group-label";
+    label.textContent = cat;
+    const group = document.createElement("div");
+    group.className = "nav-group";
+    group.appendChild(label);
+    matched.forEach(t => {
+      const idx = topics.indexOf(t);
+      const btn = document.createElement("button");
+      btn.className = "nav-item" + (t.id === ACTIVE_TOPIC ? " active" : "");
+      btn.innerHTML = `<span class="n">${iconFor(idx)}</span><span>${t.title}</span>`;
+      btn.onclick = () => selectTopic(t.id);
+      group.appendChild(btn);
+    });
+    nav.appendChild(group);
+  });
+  if (!any){
+    const empty = document.createElement("div");
+    empty.className = "nav-empty";
+    empty.textContent = "Nada encontrado.";
+    nav.appendChild(empty);
+  }
+}
+
+function codeBlock(code){
+  return `<div class="codebox"><pre><code class="language-java">${escapeHtml(code)}</code></pre></div>`;
+}
+
+function renderContent(){
+  const t = TRACKS[CURRENT_TRACK].topics.find(x => x.id === ACTIVE_TOPIC);
+  let exemplos = codeBlock(t.code);
+  if (t.code2) {
+    exemplos = `<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;">Arquivo de configuração:</p>` + codeBlock(t.code) +
+    `<p style="font-size:12.5px;color:var(--ink-soft);margin:18px 0 8px;">Lendo os valores no código:</p>` +
+    codeBlock(t.code2);
+  }
+  document.getElementById("content").innerHTML = `
+    <p class="eyebrow">${t.cat}</p>
+    <h2>${t.title}</h2>
+    <p class="tagline">${t.tag}</p>
+    <div class="block">
+      <h3>O que é</h3>
+      <div class="prose">${t.body}</div>
+    </div>
+    <div class="block">
+      <h3>Exemplo</h3>
+      ${exemplos}
+    </div>
+  `;
+  document.getElementById("topbar-title").textContent = t.title;
+  document.getElementById("main-outer").scrollTop = 0;
+  document.querySelectorAll("#content code[class*='language-']").forEach(el => Prism.highlightElement(el));
+}
+
+function escapeHtml(str){
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function selectTopic(id){
+  location.hash = "#/" + CURRENT_TRACK + "/" + id;
+  closeNav();
+}
+
+function openNav(){
+  document.getElementById("sidebar").classList.add("open");
+  document.getElementById("overlay").classList.add("show");
+}
+function closeNav(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
+
+route();
+</script>
+</body>
+</html>
